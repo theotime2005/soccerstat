@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Charger le fichier CSV
-file_path = 'top5-players.csv'
-data = pd.read_csv(file_path)
+file_path = 'top5-players'
+data = pd.read_csv(f"{file_path}.csv")
 
 # Supprimer les doublons
 data_cleaned = data.drop_duplicates()
@@ -19,7 +19,6 @@ outliers = (data_cleaned[numeric_cols] < (mean - 3 * std)) | (data_cleaned[numer
 data_cleaned = data_cleaned[~outliers.any(axis=1)]
 
 # Sauvegarder le fichier nettoyé
-cleaned_file_path = 'top5-players-cleaned.csv'
-data_cleaned.to_csv(cleaned_file_path, index=False)
+data_cleaned.to_csv(f"{file_path}-cleaned.csv")
 
-print(f"Le fichier a été nettoyé et sauvegardé sous {cleaned_file_path}")
+print(f"Le fichier a été nettoyé et sauvegardé sous {file_path}-cleaned.csv")
