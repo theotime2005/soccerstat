@@ -19,7 +19,7 @@ outliers = (data_cleaned[numeric_cols] < (mean - 3 * std)) | (data_cleaned[numer
 data_cleaned = data_cleaned[~outliers.any(axis=1)]
 
 # Sauvegarder le fichier nettoyé
-cleaned_file_path = 'C:/Users/Marco Luis/Documents/PROJET SOCCER/top5-players-cleaned.csv'
+cleaned_file_path = 'top5-players-cleaned.csv'
 data_cleaned.to_csv(cleaned_file_path, index=False)
 
 print(f"Le fichier a été nettoyé et sauvegardé sous {cleaned_file_path}")
