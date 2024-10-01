@@ -1,27 +1,25 @@
 import pandas as pd
 
-file_path = 'top5-players'
-data = pd.read_csv(f"{file_path}.csv")
+# Charger le fichier CSV
+file_path = 'top5-players.csv'
+data = pd.read_csv(file_path)
 
+# Supprimer les doublons
 data_cleaned = data.drop_duplicates()
 
-data_cleaned = data_cleaned.applymap(lambda x: x.strip() if isinstance(x, str) else x)
-data_cleaned.drop(['Rk'], axis=1, inplace=True)
+# Calculer la moyenne et l'écart type pour les colonnes numériques
+numeric_cols = data_cleaned.select_dtypes(include=['float64', 'int64']).columns
+mean = data_cleaned[numeric_cols].mean()
+std = data_cleaned[numeric_cols].std()
 
-data_cleaned = data_cleaned.dropna()
+# Définir la règle pour les valeurs aberrantes (3 écarts types de la moyenne)
+outliers = (data_cleaned[numeric_cols] < (mean - 3 * std)) | (data_cleaned[numeric_cols] > (mean + 3 * std))
 
-def remove_outliers(df, column_name):
-    # Calculer l'écart-type de la colonne
-    std_dev = df[column_name].std()
-    
-    # Filtrer les lignes où la valeur est entre -écart-type et +écart-type
-    filtered_df = df[(df[column_name] >= -std_dev) & (df[column_name] <= std_dev)]
-    
-    return filtered_df
+# Filtrer les lignes sans valeurs aberrantes
+data_cleaned = data_cleaned[~outliers.any(axis=1)]
 
+# Sauvegarder le fichier nettoyé
+cleaned_file_path = 'C:/Users/Marco Luis/Documents/PROJET SOCCER/top5-players-cleaned.csv'
+data_cleaned.to_csv(cleaned_file_path, index=False)
 
-check_column=["G-PK", "G+A", "Ast"]
-for column in check_column:
-    data_cleaned = remove_outliers(data_cleaned, column)
-
-data_cleaned.to_csv(f"{file_path}-cleaned.csv", index=False)
+print(f"Le fichier a été nettoyé et sauvegardé sous {cleaned_file_path}")
