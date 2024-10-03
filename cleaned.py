@@ -21,6 +21,7 @@ outliers = (data_cleaned[numeric_cols] < (mean - 3 * std)) | (data_cleaned[numer
 
 # Filtrer les lignes sans valeurs aberrantes
 data_cleaned = data_cleaned[~outliers.any(axis=1)]
+data_cleaned.reset_index(drop=True, inplace=True)
 
 # Sauvegarder le fichier nettoyé
 data_cleaned.to_csv(f"{file_path}-cleaned.csv", index=False)
